@@ -1,15 +1,14 @@
-FROM node:20-bullseye
+FROM ghcr.io/puppeteer/puppeteer:latest
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm install
-
-# Copy source code
+# Copy files
 COPY . .
 
-# Expose port and run app
+# Install dependencies
+RUN npm install
+
+# Expose and run
 EXPOSE 8080
 CMD ["npm", "start"]
