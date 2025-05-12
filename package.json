@@ -1,6 +1,3 @@
-// --------------------
-// FILE: package.json
-// --------------------
 {
   "name": "trustgap-flyio-scraper",
   "version": "1.0.0",
