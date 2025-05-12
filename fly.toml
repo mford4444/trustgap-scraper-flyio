@@ -1,12 +1,8 @@
-// --------------------
-// FILE: fly.toml (optional if generated via fly launch)
-// --------------------
-# fly.toml app configuration
 app = "trustgap-scraper-flyio"
 primary_region = "iad"
 
 [build]
-  builder = "heroku/buildpacks:20"
+  dockerfile = "Dockerfile"
 
 [env]
   NODE_ENV = "production"
