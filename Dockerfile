@@ -3,12 +3,16 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 # Set working directory
 WORKDIR /app
 
-# Copy files
+# Copy your app files
 COPY . .
 
 # Install dependencies
 RUN npm install
 
-# Expose and run
+# Set environment variable to disable Chromium sandbox
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Run with proper Puppeteer launch flags
 EXPOSE 8080
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
