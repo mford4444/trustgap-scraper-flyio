@@ -1,6 +1,4 @@
-// --------------------
-// FILE: scraper.js
-// --------------------
+
 import puppeteer from 'puppeteer';
 
 export async function scrapeBrokerCheck(crdNumber) {
