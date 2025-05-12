@@ -1,8 +1,4 @@
-// flyio-scraper-app
 
-// --------------------
-// FILE: index.js
-// --------------------
 import express from 'express';
 import { scrapeBrokerCheck } from './scraper.js';
 
