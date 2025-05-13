@@ -5,10 +5,10 @@ export async function scrapeBrokerCheck(crdNumber) {
   const url = `https://brokercheck.finra.org/individual/summary/${crdNumber}`;
   console.log(`Launching browser for CRD ${crdNumber}`);
 
-  const browser = await puppeteer.launch({
+ const browser = await puppeteer.launch({
   headless: true,
-  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  pipe: true
 });
 
   const page = await browser.newPage();
