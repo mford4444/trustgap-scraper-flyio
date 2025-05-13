@@ -5,35 +5,37 @@ export async function scrapeBrokerCheck(crdNumber) {
   const url = `https://brokercheck.finra.org/individual/summary/${crdNumber}`;
   console.log(`Launching browser for CRD ${crdNumber}`);
 
- const browser = await puppeteer.launch({
-  headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  pipe: true
-});
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    pipe: true
+  });
 
   const page = await browser.newPage();
   console.log(`Navigating to ${url}`);
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
   try {
-    await page.goto(url, { waitUntil: 'networkidle2' });
-    await page.waitForFunction(() => window.__REACT_QUERY_INITIAL_QUERIES__, { timeout: 10000 });
+    await page.waitForSelector('.individual-summary__section', { timeout: 10000 });
 
-    const data = await page.evaluate(() => {
-      const raw = window.__REACT_QUERY_INITIAL_QUERIES__;
-      const obj = raw?.[0]?.state?.data;
+    const result = await page.evaluate(() => {
+      const getText = (selector) => {
+        const el = document.querySelector(selector);
+        return el?.innerText?.trim() || null;
+      };
+
       return {
-        summary: obj?.bio || 'No summary available',
-        disclosuresCount: obj?.disclosures?.length || 0,
-        yearsOfExperience: obj?.yearsOfExperience || null,
-        isPreviouslyRegistered: obj?.isPreviouslyRegistered || false,
-        affiliations: obj?.registrations?.map(r => r.firm?.name).filter(Boolean) || []
+        summary: getText('.individual-summary__bio') || 'No summary available',
+        name: getText('.individual-summary__name'),
+        currentFirm: getText('.individual-summary__firm-name'),
+        registrations: Array.from(document.querySelectorAll('.registration__firm')).map(el => el.innerText.trim()),
       };
     });
 
     await browser.close();
-    return { crdNumber, ...data };
+    return { crdNumber, ...result };
   } catch (err) {
     await browser.close();
-    throw new Error(`Puppeteer scrape failed: ${err.message}`);
+    throw new Error(`Scrape logic failed: ${err.message}`);
   }
 }
