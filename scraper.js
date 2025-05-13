@@ -6,9 +6,10 @@ export async function scrapeBrokerCheck(crdNumber) {
   console.log(`Launching browser for CRD ${crdNumber}`);
 
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  headless: true,
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
 
   const page = await browser.newPage();
   console.log(`Navigating to ${url}`);
